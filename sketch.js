@@ -89,7 +89,7 @@ function setup() {
 
   createButton("Save Image of Maze").mousePressed(() => {
     saveCanvas(`generated_maze_${Math.floor(new Date() / 1000)}.jpg`);
-  })
+  }).addClass('save-image');
 
   setupMazeGrid();
 }
