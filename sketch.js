@@ -4,7 +4,7 @@ var confirmedRGB = { r: 58, g: 144, b: 39 }, confirmedRGBP;
 var searchingRGB = { r: 44, g: 138, b: 217 }, searchingRGBP;
 var backgroundRGB = { r: 51, g: 51, b: 51 }, backgroundRGBP;
 var cellSize = 20, cellSizeSlider, cellSizeP;
-var gridWidth = 800, gridHeight = 800, gridWidthSlider, gridHeightSlider, gridSizeP;
+var gridWidth = 500, gridHeight = 500, gridWidthSlider, gridHeightSlider, gridSizeP;
 var showUnvisitedWalls = false;
 var rgbOptions = ['confirmed', 'searching', 'background'];
 var cellSize = 20;
