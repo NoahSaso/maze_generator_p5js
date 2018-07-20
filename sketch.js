@@ -3,18 +3,18 @@ var speed = 1, speedP;
 var confirmedRGB = { r: 58, g: 144, b: 39 }, confirmedRGBP;
 var searchingRGB = { r: 44, g: 138, b: 217 }, searchingRGBP;
 var backgroundRGB = { r: 51, g: 51, b: 51 }, backgroundRGBP;
+var rgbOptions = ['confirmed', 'searching', 'background'];
 var cellSize = 20, cellSizeSlider, cellSizeP;
 var gridWidth = 500, gridHeight = 500, gridWidthSlider, gridHeightSlider, gridSizeP;
 var showUnvisitedWalls = false;
-var rgbOptions = ['confirmed', 'searching', 'background'];
 var cellSize = 20;
-var numRows;
-var numCols;
-var cells = [];
-var startingRow = 0;
-var startingCol = 0;
 // CONFIG
 
+var startingRow = 0;
+var startingCol = 0;
+var cells = [];
+var numRows;
+var numCols;
 var stack = [];
 
 function setup() {
@@ -51,26 +51,33 @@ function setup() {
     cellSizeP.html("Cell Size: " + cellSize);
     // make width and height multiple of cell size by subtracting remainder
     gridWidth -= (gridWidth % cellSize);
+    gridWidthSlider.value(gridWidth);
     gridHeight -= (gridHeight % cellSize);
+    gridHeightSlider.value(gridHeight);
+    gridSizeP.html(`Grid Size (must be multiple of cell size, will automatically adjust if not): ${gridWidth}px X ${gridHeight}px`);
     // remake grid
     setupMazeGrid();
   });
 
   gridSizeP = createP(`Grid Size (must be multiple of cell size, will automatically adjust if not): ${gridWidth}px X ${gridHeight}px`);
-  createSlider(100, 3000, gridWidth).changed((e) => {
+  gridWidthSlider = createSlider(100, 3000, gridWidth).changed((e) => {
     gridWidth = e.target.value;
     // make width and height multiple of cell size by subtracting remainder
     gridWidth -= (gridWidth % cellSize);
+    gridWidthSlider.value(gridWidth);
     gridHeight -= (gridHeight % cellSize);
+    gridHeightSlider.value(gridHeight);
     gridSizeP.html(`Grid Size (must be multiple of cell size, will automatically adjust if not): ${gridWidth}px X ${gridHeight}px`);
     // remake grid
     setupMazeGrid();
   });
-  createSlider(100, 3000, gridHeight).changed((e) => {
+  gridHeightSlider = createSlider(100, 3000, gridHeight).changed((e) => {
     gridHeight = e.target.value;
     // make width and height multiple of cell size by subtracting remainder
     gridWidth -= (gridWidth % cellSize);
+    gridWidthSlider.value(gridWidth);
     gridHeight -= (gridHeight % cellSize);
+    gridHeightSlider.value(gridHeight);
     gridSizeP.html(`Grid Size (must be multiple of cell size, will automatically adjust if not): ${gridWidth}px X ${gridHeight}px`);
     // remake grid
     setupMazeGrid();
@@ -84,13 +91,13 @@ function setup() {
     saveCanvas(`generated_maze_${Math.floor(new Date() / 1000)}.jpg`);
   })
 
-  this.setupMazeGrid();
+  setupMazeGrid();
 }
 
 function setupMazeGrid() {
   cells = [];
-  numRows = floor(gridHeight / cellSize);
-  numCols = floor(gridWidth / cellSize);
+  numRows = gridHeight / cellSize;
+  numCols = gridWidth / cellSize;
   for (var i = 0; i < numRows; i++) {
     let cellCol = [];
     for (var j = 0; j < numCols; j++) {
