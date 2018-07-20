@@ -1,9 +1,9 @@
 // CONFIG
 var speed = 1, speedP;
-var confirmedRGB = { r: 58, g: 144, b: 39 }, confirmedRGBP;
-var searchingRGB = { r: 44, g: 138, b: 217 }, searchingRGBP;
-var backgroundRGB = { r: 51, g: 51, b: 51 }, backgroundRGBP;
-var wallRGB = { r: 255, g: 255, b: 255 }, wallRGBP;
+var confirmedRGB = { r: 58, g: 144, b: 39 }, confirmedRGBS = [];
+var searchingRGB = { r: 44, g: 138, b: 217 }, searchingRGBS = [];
+var backgroundRGB = { r: 51, g: 51, b: 51 }, backgroundRGBS = [];
+var wallRGB = { r: 255, g: 255, b: 255 }, wallRGBS = [];
 var rgbOptions = ['confirmed', 'searching', 'background', 'wall'];
 var cellSize = 20, cellSizeSlider, cellSizeP;
 var gridWidth = 500, gridHeight = 500, gridWidthSlider, gridHeightSlider, gridSizeP;
@@ -17,6 +17,17 @@ var cells = [];
 var numRows;
 var numCols;
 var stack = [];
+
+function updateColors() {
+  for (var rgbOption of rgbOptions) {
+    let rgbObj = window[rgbOption + "RGB"];
+    for (var i = 0; i < 3; i++) {
+      let attr = (i == 0 ? "r" : (i == 1 ? "g" : "b"));
+      rgbObj[attr] = window[rgbOption + "RGBS"][i].value();
+    }
+    window[rgbOption + "RGBP"].html(`${rgbOption.charAt(0).toUpperCase() + rgbOption.substr(1)} Color: rgb(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b})`);
+  }
+}
 
 function setup() {
   createCanvas(gridWidth, gridHeight);
@@ -33,22 +44,30 @@ function setup() {
     speedP.html("Speed: " + speed);
   });
 
-  // create rgb color options for all in one convenient loop using lots of evals
+  // create rgb color options for all in one convenient loop
   for (var rgbOption of rgbOptions) {
-    let rgbObj = eval(`${rgbOption}RGB`);
-    eval(`${rgbOption}RGBP = createP("${rgbOption.charAt(0).toUpperCase() + rgbOption.substr(1)} Color: rgb(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b})")`);
-    for (var i = 0; i < 3; i++) {
-      let attr = (i == 0 ? "r" : (i == 1 ? "g" : "b"));
-      createSlider(0, 255, eval(`${rgbOption}RGB.${attr}`)).changed((e) => {
-        eval(`${rgbOption}RGB.${attr} = ${e.target.value}`);
-        eval(`${rgbOption}RGBP.html("${rgbOption.charAt(0).toUpperCase() + rgbOption.substr(1)} Color: rgb(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b})")`);
-      });
+    let rgbObj = window[rgbOption + "RGB"];
+    // store current object as defaults for reset button
+    window[rgbOption + 'RGBD'] = Object.assign({}, rgbObj);
+    // create p element and store it in a global variable
+    window[rgbOption + 'RGBP'] = createP(`${rgbOption.charAt(0).toUpperCase() + rgbOption.substr(1)} Color: rgb(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b})`);
+    // create a slider for each value
+    for (var c of ['r', 'g', 'b']) {
+      window[rgbOption + 'RGBS'].push(createSlider(0, 255, rgbObj[c]).changed(updateColors));
     }
-    createButton("Reset").mousePressed(() => {
-      eval(`${rgbOption}RGB.r = ${rgbObj.r}`);
-      eval(`${rgbOption}RGB.g = ${rgbObj.g}`);
-      eval(`${rgbOption}RGB.b = ${rgbObj.b}`);
-    });
+    createButton("Reset").mousePressed((e) => {
+      let rgbOpt = e.target.classList[0];
+      // set color object to copy of default
+      window[rgbOpt + 'RGB'] = Object.assign({}, window[rgbOpt + 'RGBD']);
+      // change label
+      let rgbOptObj = window[rgbOpt + 'RGB'];
+      window[rgbOpt + "RGBP"].html(`${rgbOpt.charAt(0).toUpperCase() + rgbOpt.substr(1)} Color: rgb(${rgbOptObj.r}, ${rgbOptObj.g}, ${rgbOptObj.b})`);
+      // loop through and update sliders
+      for (var i = 0; i < 3; i++) {
+        let attr = (i == 0 ? "r" : (i == 1 ? "g" : "b"));
+        window[rgbOpt + "RGBS"][i].value(rgbOptObj[attr]);
+      }
+    }).addClass(rgbOption);
   }
 
   cellSizeP = createP("Cell Size: " + cellSize);
