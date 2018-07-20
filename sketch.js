@@ -53,7 +53,7 @@ function setup() {
 
   cellSizeP = createP("Cell Size: " + cellSize);
   createSlider(1, 100, cellSize).changed((e) => {
-    cellSize = e.target.value;
+    cellSize = parseInt(e.target.value);
     cellSizeP.html("Cell Size: " + cellSize);
     // make width and height multiple of cell size by subtracting remainder
     gridWidth -= (gridWidth % cellSize);
