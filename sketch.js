@@ -5,7 +5,7 @@ var searchingRGB = { r: 44, g: 138, b: 217 }, searchingRGBP;
 var backgroundRGB = { r: 51, g: 51, b: 51 }, backgroundRGBP;
 var cellSize = 20, cellSizeSlider, cellSizeP;
 var gridWidth = 800, gridHeight = 800, gridWidthSlider, gridHeightSlider, gridSizeP;
-var showUnvisitedWalls = true;
+var showUnvisitedWalls = false;
 var rgbOptions = ['confirmed', 'searching', 'background'];
 var cellSize = 20;
 var numRows;
@@ -79,6 +79,10 @@ function setup() {
   createCheckbox("Show Unvisited Walls", showUnvisitedWalls).changed((e) => {
     showUnvisitedWalls = e.target.checked;
   });
+
+  createButton("Save Image of Maze").mousePressed(() => {
+    saveCanvas(`generated_maze_${Math.floor(new Date() / 1000)}.jpg`);
+  })
 
   this.setupMazeGrid();
 }
