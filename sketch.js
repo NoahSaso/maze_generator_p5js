@@ -59,19 +59,19 @@ function setup() {
   gridSizeP = createP(`Grid Size (must be multiple of cell size, will automatically adjust if not): ${gridWidth}px X ${gridHeight}px`);
   createSlider(100, 3000, gridWidth).changed((e) => {
     gridWidth = e.target.value;
-    gridSizeP.html(`Grid Size (must be multiple of cell size, will automatically adjust if not): ${gridWidth}px X ${gridHeight}px`);
     // make width and height multiple of cell size by subtracting remainder
     gridWidth -= (gridWidth % cellSize);
     gridHeight -= (gridHeight % cellSize);
+    gridSizeP.html(`Grid Size (must be multiple of cell size, will automatically adjust if not): ${gridWidth}px X ${gridHeight}px`);
     // remake grid
     setupMazeGrid();
   });
   createSlider(100, 3000, gridHeight).changed((e) => {
     gridHeight = e.target.value;
-    gridSizeP.html(`Grid Size (must be multiple of cell size, will automatically adjust if not): ${gridWidth}px X ${gridHeight}px`);
     // make width and height multiple of cell size by subtracting remainder
     gridWidth -= (gridWidth % cellSize);
     gridHeight -= (gridHeight % cellSize);
+    gridSizeP.html(`Grid Size (must be multiple of cell size, will automatically adjust if not): ${gridWidth}px X ${gridHeight}px`);
     // remake grid
     setupMazeGrid();
   });
