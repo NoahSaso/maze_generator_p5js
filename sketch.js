@@ -3,7 +3,8 @@ var speed = 1, speedP;
 var confirmedRGB = { r: 58, g: 144, b: 39 }, confirmedRGBP;
 var searchingRGB = { r: 44, g: 138, b: 217 }, searchingRGBP;
 var backgroundRGB = { r: 51, g: 51, b: 51 }, backgroundRGBP;
-var rgbOptions = ['confirmed', 'searching', 'background'];
+var wallRGB = { r: 255, g: 255, b: 255 }, wallRGBP;
+var rgbOptions = ['confirmed', 'searching', 'background', 'wall'];
 var cellSize = 20, cellSizeSlider, cellSizeP;
 var gridWidth = 500, gridHeight = 500, gridWidthSlider, gridHeightSlider, gridSizeP;
 var showUnvisitedWalls = false;
@@ -21,6 +22,11 @@ function setup() {
   createCanvas(gridWidth, gridHeight);
 
   // config
+
+  createButton("Restart").mousePressed(() => {
+    setupMazeGrid();
+  }).addClass("spacing");
+
   speedP = createP("Speed: " + speed);
   createSlider(1, 100, speed).changed((e) => {
     speed = e.target.value;
@@ -85,11 +91,11 @@ function setup() {
 
   createCheckbox("Show Unvisited Walls", showUnvisitedWalls).changed((e) => {
     showUnvisitedWalls = e.target.checked;
-  });
+  }).addClass("spacing");
 
   createButton("Save Image of Maze").mousePressed(() => {
     saveCanvas(`generated_maze_${Math.floor(new Date() / 1000)}.jpg`);
-  }).addClass('save-image');
+  }).addClass("spacing");
 
   setupMazeGrid();
 }
@@ -106,6 +112,7 @@ function setupMazeGrid() {
     cells.push(cellCol);
   }
   let firstCell = cells[startingRow][startingCol];
+  firstCell.visited = true;
   firstCell.highlight = true;
   stack = [firstCell];
   resizeCanvas(gridWidth, gridHeight);

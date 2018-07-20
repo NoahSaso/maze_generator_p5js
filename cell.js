@@ -10,7 +10,7 @@ class Cell {
   }
 
   show() {
-    stroke(255);
+    stroke(wallRGB.r, wallRGB.g, wallRGB.b);
     let xTL = this.col * cellSize;
     let yTL = this.row * cellSize;
     let xTR = xTL + cellSize;
